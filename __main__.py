@@ -9,7 +9,7 @@ from Notice import lineNotifyMessage, openFile
 
 
 def main():
-
+    
     configParser = configparser.ConfigParser()
     configParser.read(r'App.config')
     key = configParser.get('AppConfig', 'key')
@@ -110,16 +110,17 @@ def main():
         tp = TradingPortfolio(key, secret)
         tp.register(tm1)
         # tp.register(tm2)
-        tp.register_margin('BUSD', Asset) #想要投資的資產
+        tp.register_margin('USDT', int(Asset)) #想要投資的資產
 
         ohlcvs = tp.get_ohlcvs()
-
+        
         signals = tp.get_latest_signals(ohlcvs)
         position, position_btc, new_orders = tp.calculate_position_size(signals)
         
         mode="TEST"
         order_results = tp.execute_orders(new_orders, mode=mode)
-
+        print(order_results)
+        
         if mode == "TEST":
             html = render_html(signals,position,position_btc,new_orders,order_results)
             with open("profolio.html",mode="w",encoding="utf-8") as file:
@@ -136,7 +137,7 @@ def main():
             else:
                 lineNotifyMessage(token,'Fail')
 
-    # rebalance_position()
+    rebalance_position()
 
 
 

@@ -29,10 +29,5 @@ def lineNotifyMessage(token, msg):
                         headers=headers, params=payload)
     return r.status_code
 
-if __name__ == "__main__":
-    token = 'nKBGxs9QMER2ri7N9YzMrymB5NyK2xhW90Fi8rHv8Mg'
-    msg = '交易結果: Success'
-    lineNotifyMessage(token,msg)
-
 
 
