@@ -10,10 +10,13 @@ def openFile():
     if 'ok' == text.lower():
         filename = 'file:///'+'D:/BitHelper'+'/' + 'profolio.html'
         webbrowser.open_new_tab(filename)
+        
 
     text = input("Would you like to Send this Order ok ?")
+    
     if 'ok' == text.lower():
         confirm = True
+
     os.remove('D:/BitHelper/profolio.html')
     return confirm
 
@@ -24,7 +27,7 @@ def lineNotifyMessage(token, msg):
         "Content-Type": "application/x-www-form-urlencoded"
     }
 
-    payload = {'message': msg}
+    payload = {'message': '結果: ' + msg}
     r = requests.post("https://notify-api.line.me/api/notify",
                         headers=headers, params=payload)
     return r.status_code

@@ -119,6 +119,8 @@ def main():
         
         mode="TEST"
         order_results = tp.execute_orders(new_orders, mode=mode)
+        order_length = len(new_orders.index)
+
         print(order_results)
         
         if mode == "TEST":
@@ -126,12 +128,15 @@ def main():
             with open("profolio.html",mode="w",encoding="utf-8") as file:
                 file.writelines(html)
             confirm = openFile()
+            print(confirm)
             if confirm == True:
                 mode="MARKE"
-                order_length = len(new_orders.index)
                 order_results = tp.execute_orders(new_orders, mode=mode)
                 success_length = len(order_results[['result']] == 'success')
 
+            print(order_length)
+            print(success_length)
+            
             if (order_length == success_length):
                 lineNotifyMessage(token,'Success')
             else:
