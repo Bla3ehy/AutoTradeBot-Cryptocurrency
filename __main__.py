@@ -112,8 +112,9 @@ def main():
         # tp.register(tm2)
         tp.register_margin('USDT', int(Asset)) #想要投資的資產
 
+        print('取得歷史資料...')
         ohlcvs = tp.get_ohlcvs()
-        
+
         signals = tp.get_latest_signals(ohlcvs)
         position, position_btc, new_orders = tp.calculate_position_size(signals)
         
