@@ -16,6 +16,7 @@ def main():
     secret = configParser.get('AppConfig','secret')
     token = configParser.get('AppConfig','token')
     Asset = configParser.get('AppConfig','asset')
+    symbols = ['ADABUSD', 'ETHBUSD', 'BTCBUSD', 'BNBBUSD','DOGEBUSD']
     
     # Filter: trends = {
     #     'sma': sma,
@@ -28,7 +29,7 @@ def main():
     #     'linear_reg': linear_reg
     # }
 
-    @Strategy(name="hullma", n1=110, n2=260)
+    @Strategy(name="sma", n1=110, n2=260)
     def trend_strategy(ohlcv):
         name = trend_strategy.name
         n1 = trend_strategy.n1
@@ -39,6 +40,14 @@ def main():
 
         entries = (filtered1 > filtered2) & (filtered1.shift() < filtered2.shift())
         exit = (filtered1 < filtered2) & (filtered1.shift() > filtered2.shift())
+
+        # mmi
+        median = ohlcv.close.rolling(20).median()
+        p1 = ohlcv.close > median
+        p2 = ohlcv.close.shift() > median
+        mmi = (p1 & p2).astype(int).rolling(20).mean()
+
+        entries = entries & (mmi > 0.5)
 
         figures = {
             'overlaps': {
@@ -57,14 +66,14 @@ def main():
     # {'ETHUSDT': 0.5, 'ADABUSD': 0.1,'default':0.2}
 
     tm1 = TradingMethod(
-        symbols=['ADABUSD', 'ETHBUSD', 'BTCBUSD', 'BNBBUSD'],
+        symbols=symbols,
         freq='4h',
         # lookback:backtest data length
         lookback=1500, #K棒數
         strategy=trend_strategy,
         variables=dict(
             name='sma',
-            n1=110,
+            n1=110  ,
             n2=260,
         ),
         filters={},
